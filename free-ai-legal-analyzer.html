@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Legal Document Analyzer - Free AI Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
+            border-bottom: 3px solid #d4af37;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5em;
+            color: #d4af37;
+        }
+
+        .logo h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: #d4af37;
+            font-size: 0.9em;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #d4af37, #f4d03f);
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #1a1a2e;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Free Badge */
+        .free-badge {
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* API Configuration Panel */
+        .api-config {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .api-config h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .api-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .api-input-group label {
+            color: #d4af37;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .api-input-group input {
+            padding: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e74c3c;
+        }
+
+        .status-dot.connected {
+            background: #2ecc71;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .nav-tab button {
+            width: 100%;
+            padding: 18px 20px;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab button:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+        }
+
+        .nav-tab button.active {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+
+        /* Main Content */
+        main {
+            padding: 40px 0;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #d4af37;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #d4af37;
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .upload-area:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #f4d03f;
+        }
+
+        .upload-area.dragover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: #f4d03f;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+
+        /* File List */
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            font-size: 1.5em;
+            color: #d4af37;
+        }
+
+        .file-details h4 {
+            margin-bottom: 5px;
+        }
+
+        .file-details span {
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            height: 500px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #d4af37, #f4d03f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a2e;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .message.user .message-content {
+            background: rgba(74, 144, 226, 0.2);
+            border-color: rgba(74, 144, 226, 0.3);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            gap: 15px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .chat-input input::placeholder {
+            color: #cccccc;
+        }
+
+        .chat-input button {
+            padding: 15px 25px;
+            border-radius: 25px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d4af37;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #d4af37;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-top: 2px solid #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .status-processing {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+
+        .status-error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .logo h1 {
+                font-size: 1.5em;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                min-width: auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .api-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Free API Info */
+        .api-info {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .api-info h4 {
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-balance-scale"></i>
+                    <div>
+                        <h1>Indian Legal Document Analyzer</h1>
+                        <span>Free AI Edition - Perfect for Hackathons</span>
+                        <div class="free-badge">100% FREE</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-github"></i>
+                        GitHub
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-tabs">
+                <li class="nav-tab">
+                    <button class="tab-btn active" data-tab="config">
+                        <i class="fas fa-key"></i>
+                        Free APIs Setup
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="upload">
+                        <i class="fas fa-upload"></i>
+                        Document Upload
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="summarize">
+                        <i class="fas fa-file-alt"></i>
+                        AI Summarization
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="qa">
+                        <i class="fas fa-question-circle"></i>
+                        Legal Q&A
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="translate">
+                        <i class="fas fa-language"></i>
+                        Translation
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="search">
+                        <i class="fas fa-search"></i>
+                        AI Search
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <!-- Free APIs Configuration Tab -->
+            <div id="config" class="tab-content active">
+                <div class="api-info">
+                    <h4><i class="fas fa-gift"></i> Free AI APIs for Hackathons</h4>
+                    <p>All APIs below are FREE to use! Perfect for hackathons, demos, and prototyping. No credit card required for most.</p>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-rocket"></i> Free AI APIs Configuration</h2>
+                    
+                    <div class="api-config">
+                        <h3><i class="fas fa-zap"></i> Groq AI (Ultra Fast & Free) <span class="free-badge">RECOMMENDED</span></h3>
+                        <p style="color: #cccccc; margin-bottom: 15px;">
+                            <strong>Best for:</strong> Document analysis, Q&A, summarization<br>
+                            <strong>Speed:</strong> Ultra-fast inference (500+ tokens/sec)<br>
+                            <strong>Limit:</strong> 14,400 requests/day, 6,000 tokens/minute<br>
+                            <strong>Get Key:</strong> <a href="https://console.groq.com" target="_blank" style="color: #d4af37;">console.groq.com</a>
+                        </p>
+                        <div class="api-inputs">
+                            <div class="api-input-group">
+                                <label for="groq-key">Groq API Key</label>
+                                <input type="password" id="groq-key" placeholder="gsk_..." onchange="validateGroqKey()">
+                            </div>
+                            <div class="api-input-group">
+                                <label for="groq-model">Model</label>
+                                <select id="groq-model">
+                                    <option value="llama3-70b-8192">Llama 3 70B (Best Quality)</option>
+                                    <option value="llama3-8b-8192">Llama 3 8B (Fastest)</option>
+                                    <option value="mixtral-8x7b-32768">Mixtral 8x7B (Good Balance)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot" id="groq-status"></div>
+                            <span id="groq-status-text">Not connected</span>
+                        </div>
+                    </div>
+
+                    <div class="api-config">
+                        <h3><i class="fas fa-robot"></i> Hugging Face Inference API (Free)</h3>
+                        <p style="color: #cccccc; margin-bottom: 15px;">
+                            <strong>Best for:</strong> Backup AI, specialized models<br>
+                            <strong>Limit:</strong> 1,000 requests/hour<br>
+                            <strong>Get Token:</strong> <a href="https://huggingface.co/settings/tokens" target="_blank" style="color: #d4af37;">huggingface.co/settings/tokens</a>
+                        </p>
+                        <div class="api-inputs">
+                            <div class="api-input-group">
+                                <label for="hf-token">Hugging Face Token</label>
+                                <input type="password" id="hf-token" placeholder="hf_..." onchange="validateHFToken()">
+                            </div>
+                            <div class="api-input-group">
+                                <label for="hf-model">Model</label>
+                                <select id="hf-model">
+                                    <option value="microsoft/DialoGPT-large">DialoGPT Large</option>
+                                    <option value="facebook/blenderbot-400M-distill">BlenderBot</option>
+                                    <option value="microsoft/GODEL-v1_1-large-seq2seq">GODEL</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot" id="hf-status"></div>
+                            <span id="hf-status-text">Not connected</span>
+                        </div>
+                    </div>
+
+                    <div class="api-config">
+                        <h3><i class="fas fa-language"></i> Free Translation APIs</h3>
+                        <p style="color: #cccccc; margin-bottom: 15px;">
+                            <strong>MyMemory:</strong> 10,000 chars/day free<br>
+                            <strong>LibreTranslate:</strong> Open source, unlimited<br>
+                            <strong>Google Translate:</strong> 500,000 chars/month free
+                        </p>
+                        <div class="api-inputs">
+                            <div class="api-input-group">
+                                <label for="translate-service">Translation Service</label>
+                                <select id="translate-service">
+                                    <option value="mymemory">MyMemory (Free, No Key)</option>
+                                    <option value="libretranslate">LibreTranslate (Free)</option>
+                                    <option value="google">Google Translate (Free Tier)</option>
+                                </select>
+                            </div>
+                            <div class="api-input-group">
+                                <label for="translate-key">API Key (Optional)</label>
+                                <input type="password" id="translate-key" placeholder="Optional for some services">
+                            </div>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot connected" id="translate-status"></div>
+                            <span id="translate-status-text">MyMemory ready (no key needed)</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="testAllConnections()">
+                            <i class="fas fa-check-circle"></i>
+                            Test All Free APIs
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearAllKeys()">
+                            <i class="fas fa-trash"></i>
+                            Clear All Keys
+                        </button>
+                    </div>
+
+                    <div class="error-message" id="config-error"></div>
+                </div>
+            </div>
+
+            <!-- Document Upload Tab -->
+            <div id="upload" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Document Upload & Free AI Analysis</h2>
+                    
+                    <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="upload-text">Upload your legal documents for FREE AI analysis</div>
+                        <div class="upload-subtext">Supports PDF, DOC, DOCX, TXT files up to 50MB</div>
+                    </div>
+                    
+                    <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.txt" style="display: none;">
+                    
+                    <div class="file-list" id="file-list"></div>
+
+                    <div class="error-message" id="upload-error"></div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-bar"></i> Free AI Document Analysis</h2>
+                    <div id="analysis-overview">
+                        <p>Upload documents to get FREE AI analysis including:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Legal entity extraction (parties, judges, lawyers)</li>
+                            <li>Key date and timeline identification</li>
+                            <li>Case number and citation references</li>
+                            <li>Legal section and act references</li>
+                            <li>Document classification and type</li>
+                            <li>Sentiment analysis and key themes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summarization Tab -->
+            <div id="summarize" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-compress-alt"></i> Free AI Legal Document Summarization</h2>
+                    
+                    <div class="form-group">
+                        <label for="summary-type">Summary Type</label>
+                        <select id="summary-type">
+                            <option value="comprehensive">Comprehensive Legal Summary</option>
+                            <option value="executive">Executive Summary</option>
+                            <option value="key-points">Key Points & Legal Issues</option>
+                            <option value="timeline">Timeline & Chronology</option>
+                            <option value="parties">Parties & Stakeholders</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="summary-length">Summary Length</label>
+                        <select id="summary-length">
+                            <option value="short">Short (1-2 paragraphs)</option>
+                            <option value="medium">Medium (3-5 paragraphs)</option>
+                            <option value="long">Long (Detailed analysis)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="generateFreeSummary()" id="generate-summary-btn">
+                        <i class="fas fa-magic"></i>
+                        Generate FREE AI Summary
+                    </button>
+                    
+                    <div id="summary-result" style="display: none; margin-top: 30px;">
+                        <h3 style="color: #d4af37; margin-bottom: 20px;">Free AI-Generated Summary</h3>
+                        <div id="summary-content" class="document-content"></div>
+                    </div>
+
+                    <div class="error-message" id="summary-error"></div>
+                </div>
+            </div>
+
+            <!-- Legal Q&A Tab -->
+            <div id="qa" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-comments"></i> Free AI Legal Assistant</h2>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        
+                        <div class="chat-input">
+                            <input type="text" id="chat-input" placeholder="Ask any question about Indian law...">
+                            <button class="btn btn-primary" onclick="sendFreeAIMessage()" id="send-message-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Ask AI (FREE)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="qa-error"></div>
+                </div>
+            </div>
+
+            <!-- Translation Tab -->
+            <div id="translate" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-globe"></i> Free AI Translation</h2>
+                    
+                    <div class="flex gap-20" style="margin-bottom: 20px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="source-lang">Source Language</label>
+                            <select id="source-lang">
+                                <option value="auto">Auto-detect</option>
+                                <option value="en">English</option>
+                                <option value="hi">Hindi (हिंदी)</option>
+                                <option value="ta">Tamil (தமிழ்)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
+                                <option value="mr">Marathi (मराठी)</option>
+                                <option value="gu">Gujarati (ગુજરાતી)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="target-lang">Target Language</label>
+                            <select id="target-lang">
+                                <option value="hi">Hindi (हिंदी)</option>
+                                <option value="en">English</option>
+                                <option value="ta">Tamil (தமிழ்)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
+                                <option value="mr">Marathi (मराठी)</option>
+                                <option value="gu">Gujarati (ગુજરાતી)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="translation-text">Text to Translate</label>
+                        <textarea id="translation-text" placeholder="Enter legal text to translate..."></textarea>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="translateWithFreeAPI()" id="translate-btn">
+                        <i class="fas fa-exchange-alt"></i>
+                        Translate (FREE)
+                    </button>
+                    
+                    <div id="translation-result" style="display: none;">
+                        <h3 style="color: #d4af37; margin-bottom: 15px;">Free Translation Result</h3>
+                        <div class="document-content" id="translation-output" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2);"></div>
+                    </div>
+
+                    <div class="error-message" id="translation-error"></div>
+                </div>
+            </div>
+
+            <!-- Search & Analysis Tab -->
+            <div id="search" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-search-plus"></i> Free AI Legal Search & Research</h2>
+                    
+                    <div class="form-group">
+                        <label for="search-query">Legal Research Query</label>
+                        <input type="text" id="search-query" placeholder="Ask about Indian legal cases, acts, or procedures...">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="performFreeAISearch()" id="search-btn">
+                        <i class="fas fa-search"></i>
+                        Research with Free AI
+                    </button>
+                    
+                    <div id="search-results" style="display: none; margin-top: 30px;">
+                        <h3 style="color: #d4af37; margin-bottom: 20px;">Free AI Research Results</h3>
+                        <div id="search-content" class="document-content"></div>
+                    </div>
+
+                    <div class="error-message" id="search-error"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Free AI APIs Configuration
+        const FREE_API_CONFIG = {
+            groq: {
+                key: localStorage.getItem('groq_key') || '',
+                model: localStorage.getItem('groq_model') || 'llama3-70b-8192',
+                endpoint: 'https://api.groq.com/openai/v1/chat/completions'
+            },
+            huggingface: {
+                token: localStorage.getItem('hf_token') || '',
+                model: localStorage.getItem('hf_model') || 'microsoft/DialoGPT-large',
+                endpoint: 'https://api-inference.huggingface.co/models/'
+            },
+            translation: {
+                service: localStorage.getItem('translate_service') || 'mymemory',
+                key: localStorage.getItem('translate_key') || ''
+            }
+        };
+
+        // Global variables
+        let uploadedFiles = [];
+        let documentContents = {};
+
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabName = this.dataset.tab;
+                switchTab(tabName);
+            });
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // API Configuration Functions
+        function validateGroqKey() {
+            const key = document.getElementById('groq-key').value;
+            const model = document.getElementById('groq-model').value;
+            
+            if (key) {
+                localStorage.setItem('groq_key', key);
+                localStorage.setItem('groq_model', model);
+                FREE_API_CONFIG.groq.key = key;
+                FREE_API_CONFIG.groq.model = model;
+                
+                testGroqConnection();
+            }
+        }
+
+        function validateHFToken() {
+            const token = document.getElementById('hf-token').value;
+            const model = document.getElementById('hf-model').value;
+            
+            if (token) {
+                localStorage.setItem('hf_token', token);
+                localStorage.setItem('hf_model', model);
+                FREE_API_CONFIG.huggingface.token = token;
+                FREE_API_CONFIG.huggingface.model = model;
+                
+                testHFConnection();
+            }
+        }
+
+        async function testGroqConnection() {
+            const statusDot = document.getElementById('groq-status');
+            const statusText = document.getElementById('groq-status-text');
+            
+            statusDot.className = 'status-dot';
+            statusText.textContent = 'Testing Groq connection...';
+            
+            try {
+                const response = await fetch(FREE_API_CONFIG.groq.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${FREE_API_CONFIG.groq.key}`
+                    },
+                    body: JSON.stringify({
+                        model: FREE_API_CONFIG.groq.model,
+                        messages: [{ role: 'user', content: 'Hello' }],
+                        max_tokens: 10
+                    })
+                });
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Groq connected successfully! ⚡';
+                } else {
+                    throw new Error('Invalid Groq API key');
+                }
+            } catch (error) {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Groq connection failed';
+                console.error('Groq connection error:', error);
+            }
+        }
+
+        async function testHFConnection() {
+            const statusDot = document.getElementById('hf-status');
+            const statusText = document.getElementById('hf-status-text');
+            
+            statusDot.className = 'status-dot';
+            statusText.textContent = 'Testing Hugging Face...';
+            
+            try {
+                const response = await fetch(`${FREE_API_CONFIG.huggingface.endpoint}${FREE_API_CONFIG.huggingface.model}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${FREE_API_CONFIG.huggingface.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ inputs: 'Hello' })
+                });
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Hugging Face connected! 🤗';
+                } else {
+                    throw new Error('Invalid HF token');
+                }
+            } catch (error) {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'HF connection failed';
+                console.error('HF connection error:', error);
+            }
+        }
+
+        function testAllConnections() {
+            if (FREE_API_CONFIG.groq.key) testGroqConnection();
+            if (FREE_API_CONFIG.huggingface.token) testHFConnection();
+        }
+
+        function clearAllKeys() {
+            localStorage.removeItem('groq_key');
+            localStorage.removeItem('groq_model');
+            localStorage.removeItem('hf_token');
+            localStorage.removeItem('hf_model');
+            
+            document.getElementById('groq-key').value = '';
+            document.getElementById('hf-token').value = '';
+            
+            document.getElementById('groq-status').className = 'status-dot';
+            document.getElementById('groq-status-text').textContent = 'Not connected';
+            document.getElementById('hf-status').className = 'status-dot';
+            document.getElementById('hf-status-text').textContent = 'Not connected';
+        }
+
+        // File upload functionality
+        document.getElementById('file-input').addEventListener('change', handleFileUpload);
+
+        async function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            for (let file of files) {
+                if (file.size > 50 * 1024 * 1024) {
+                    showError('upload-error', `File ${file.name} exceeds 50MB limit`);
+                    continue;
+                }
+
+                const fileItem = {
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    type: file.type,
+                    file: file,
+                    id: Date.now() + Math.random()
+                };
+
+                uploadedFiles.push(fileItem);
+                addFileToList(fileItem);
+                
+                try {
+                    const content = await extractFileContent(file);
+                    documentContents[fileItem.id] = content;
+                } catch (error) {
+                    showError('upload-error', `Error processing ${file.name}: ${error.message}`);
+                }
+            }
+
+            if (uploadedFiles.length > 0 && FREE_API_CONFIG.groq.key) {
+                await generateFreeAIAnalysis();
+            }
+        }
+
+        async function extractFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    resolve(e.target.result);
+                };
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        async function generateFreeAIAnalysis() {
+            const analysisOverview = document.getElementById('analysis-overview');
+            analysisOverview.innerHTML = '<div class="loading"><div class="spinner"></div> Analyzing with FREE AI...</div>';
+
+            try {
+                const allContent = Object.values(documentContents).join('\n\n');
+                const prompt = `Analyze this legal document and extract:
+1. Legal entities (parties, judges, lawyers)
+2. Key dates and timelines
+3. Case numbers and citations
+4. Legal sections and act references
+5. Document type and classification
+
+Document: ${allContent.substring(0, 3000)}...`;
+
+                const response = await callGroqAPI(prompt);
+                
+                analysisOverview.innerHTML = `
+                    <div class="status-indicator status-success">
+                        <i class="fas fa-check-circle"></i>
+                        FREE AI Analysis Complete
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #d4af37; margin-bottom: 10px;">Analysis Results:</h4>
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2);">
+                            ${response.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                analysisOverview.innerHTML = `
+                    <div class="status-indicator status-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Analysis Failed
+                    </div>
+                    <p style="margin-top: 10px; color: #e74c3c;">Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        // Free AI Summarization
+        async function generateFreeSummary() {
+            if (!FREE_API_CONFIG.groq.key) {
+                showError('summary-error', 'Please configure Groq API key first');
+                return;
+            }
+
+            if (uploadedFiles.length === 0) {
+                showError('summary-error', 'Please upload documents first');
+                return;
+            }
+
+            const summaryResult = document.getElementById('summary-result');
+            const summaryContent = document.getElementById('summary-content');
+            const summaryType = document.getElementById('summary-type').value;
+            const summaryLength = document.getElementById('summary-length').value;
+            
+            const generateBtn = document.getElementById('generate-summary-btn');
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<div class="spinner"></div> Generating with FREE AI...';
+
+            summaryContent.innerHTML = '<div class="loading"><div class="spinner"></div> FREE AI is summarizing...</div>';
+            summaryResult.style.display = 'block';
+
+            try {
+                const allContent = Object.values(documentContents).join('\n\n');
+                const prompt = `As a legal AI assistant specialized in Indian law, create a ${summaryLength} ${summaryType} of this legal document:
+
+Focus on:
+- Key legal issues and arguments
+- Important dates and deadlines
+- Parties involved and their roles
+- Legal precedents and citations
+- Practical implications
+
+Document: ${allContent.substring(0, 4000)}...`;
+
+                const response = await callGroqAPI(prompt);
+                summaryContent.innerHTML = `<div class="document-content">${response.replace(/\n/g, '<br>')}</div>`;
+                
+            } catch (error) {
+                summaryContent.innerHTML = `<div class="status-indicator status-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Summary Failed: ${error.message}
+                </div>`;
+            }
+
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate FREE AI Summary';
+        }
+
+        // Free AI Legal Q&A
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendFreeAIMessage();
+            }
+        });
+
+        async function sendFreeAIMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            if (!FREE_API_CONFIG.groq.key) {
+                showError('qa-error', 'Please configure Groq API key first');
+                return;
+            }
+            
+            addMessageToChat(message, 'user');
+            input.value = '';
+            
+            const sendBtn = document.getElementById('send-message-btn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<div class="spinner"></div> AI Thinking...';
+
+            try {
+                const context = uploadedFiles.length > 0 ? 
+                    `Context: ${Object.values(documentContents).join('\n\n').substring(0, 2000)}...` : 
+                    '';
+
+                const prompt = `You are an AI legal assistant expert in Indian law. Answer this question:
+
+${context}
+
+Question: ${message}
+
+Provide accurate information about:
+- Relevant Indian legal acts and sections
+- Applicable legal procedures
+- Case law and precedents
+- Practical legal guidance`;
+
+                const response = await callGroqAPI(prompt);
+                addMessageToChat(response, 'ai');
+                
+            } catch (error) {
+                addMessageToChat(`Sorry, I encountered an error: ${error.message}. Please check your API configuration.`, 'ai');
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Ask AI (FREE)';
+        }
+
+        function addMessageToChat(message, sender) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender} fade-in`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${sender === 'user' ? 'U' : 'AI'}</div>
+                <div class="message-content">
+                    <p>${message.replace(/\n/g, '<br>')}</p>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Free Translation
+        async function translateWithFreeAPI() {
+            const sourceText = document.getElementById('translation-text').value;
+            const sourceLang = document.getElementById('source-lang').value;
+            const targetLang = document.getElementById('target-lang').value;
+            
+            if (!sourceText.trim()) {
+                showError('translation-error', 'Please enter text to translate');
+                return;
+            }
+
+            const translationResult = document.getElementById('translation-result');
+            const translationOutput = document.getElementById('translation-output');
+            const translateBtn = document.getElementById('translate-btn');
+            
+            translateBtn.disabled = true;
+            translateBtn.innerHTML = '<div class="spinner"></div> Translating (FREE)...';
+
+            translationOutput.innerHTML = '<div class="loading"><div class="spinner"></div> Translating with FREE API...</div>';
+            translationResult.style.display = 'block';
+
+            try {
+                let translatedText = '';
+                
+                if (FREE_API_CONFIG.translation.service === 'mymemory') {
+                    // MyMemory API (completely free)
+                    const langPair = `${sourceLang}|${targetLang}`;
+                    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sourceText)}&langpair=${langPair}`);
+                    const data = await response.json();
+                    translatedText = data.responseData.translatedText;
+                } else {
+                    // Fallback to AI translation
+                    const prompt = `Translate the following text from ${sourceLang} to ${targetLang}. Provide only the translation:
+
+${sourceText}`;
+                    
+                    translatedText = await callGroqAPI(prompt);
+                }
+
+                translationOutput.innerHTML = `
+                    <div class="document-content">
+                        <p><strong>Original:</strong><br>${sourceText}</p>
+                        <hr style="margin: 20px 0; border-color: rgba(212, 175, 55, 0.3);">
+                        <p><strong>Translation:</strong><br>${translatedText}</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                translationOutput.innerHTML = `<div class="status-indicator status-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Translation Failed: ${error.message}
+                </div>`;
+            }
+
+            translateBtn.disabled = false;
+            translateBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Translate (FREE)';
+        }
+
+        // Free AI Search
+        async function performFreeAISearch() {
+            const query = document.getElementById('search-query').value;
+            
+            if (!query.trim()) {
+                showError('search-error', 'Please enter a search query');
+                return;
+            }
+
+            if (!FREE_API_CONFIG.groq.key) {
+                showError('search-error', 'Please configure Groq API key first');
+                return;
+            }
+
+            const searchResults = document.getElementById('search-results');
+            const searchContent = document.getElementById('search-content');
+            const searchBtn = document.getElementById('search-btn');
+            
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<div class="spinner"></div> Researching...';
+
+            searchContent.innerHTML = '<div class="loading"><div class="spinner"></div> FREE AI is researching...</div>';
+            searchResults.style.display = 'block';
+
+            try {
+                const prompt = `As an AI legal research assistant expert in Indian law, research: "${query}"
+
+Provide comprehensive information including:
+1. Relevant Indian legal cases and precedents
+2. Applicable statutes and legal provisions  
+3. Key legal principles and interpretations
+4. Recent developments in this area
+5. Practical implications for legal practice
+
+Format as a detailed legal research report.`;
+
+                const response = await callGroqAPI(prompt);
+                searchContent.innerHTML = response.replace(/\n/g, '<br>');
+                
+            } catch (error) {
+                searchContent.innerHTML = `<div class="status-indicator status-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Research Failed: ${error.message}
+                </div>`;
+            }
+
+            searchBtn.disabled = false;
+            searchBtn.innerHTML = '<i class="fas fa-search"></i> Research with Free AI';
+        }
+
+        // Core Free AI function (Groq)
+        async function callGroqAPI(prompt) {
+            const response = await fetch(FREE_API_CONFIG.groq.endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${FREE_API_CONFIG.groq.key}`
+                },
+                body: JSON.stringify({
+                    model: FREE_API_CONFIG.groq.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are an expert AI legal assistant specialized in Indian law. Provide accurate, comprehensive, and practical legal guidance.'
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 2000
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'API error');
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // Utility functions
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            
+            setTimeout(() => {
+                errorElement.classList.remove('show');
+            }, 5000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function addFileToList(fileItem) {
+            const fileList = document.getElementById('file-list');
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'file-item fade-in';
+            fileDiv.innerHTML = `
+                <div class="file-info">
+                    <i class="fas fa-file-alt file-icon"></i>
+                    <div class="file-details">
+                        <h4>${fileItem.name}</h4>
+                        <span>${fileItem.size}</span>
+                    </div>
+                </div>
+                <div class="file-actions">
+                    <button class="btn btn-secondary btn-small" onclick="removeFile('${fileItem.id}')">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+            fileList.appendChild(fileDiv);
+        }
+
+        function removeFile(fileId) {
+            uploadedFiles = uploadedFiles.filter(file => file.id != fileId);
+            delete documentContents[fileId];
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '';
+            uploadedFiles.forEach(file => addFileToList(file));
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved API keys
+            if (FREE_API_CONFIG.groq.key) {
+                document.getElementById('groq-key').value = FREE_API_CONFIG.groq.key;
+                document.getElementById('groq-model').value = FREE_API_CONFIG.groq.model;
+            }
+            
+            if (FREE_API_CONFIG.huggingface.token) {
+                document.getElementById('hf-token').value = FREE_API_CONFIG.huggingface.token;
+                document.getElementById('hf-model').value = FREE_API_CONFIG.huggingface.model;
+            }
+
+            // Add initial AI message
+            addMessageToChat('Hello! I\'m your FREE AI legal assistant. I can help with Indian law questions, document analysis, and legal research - all completely free!', 'ai');
+        });
+    </script>
+</body>
+</html>
