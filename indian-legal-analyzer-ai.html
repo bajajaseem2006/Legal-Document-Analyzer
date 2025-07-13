@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Legal Document Analyzer - AI Integrated</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
+            border-bottom: 3px solid #d4af37;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5em;
+            color: #d4af37;
+        }
+
+        .logo h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: #d4af37;
+            font-size: 0.9em;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #d4af37, #f4d03f);
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #1a1a2e;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* API Configuration Panel */
+        .api-config {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .api-config h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .api-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .api-input-group label {
+            color: #d4af37;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .api-input-group input {
+            padding: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e74c3c;
+        }
+
+        .status-dot.connected {
+            background: #2ecc71;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .nav-tab button {
+            width: 100%;
+            padding: 18px 20px;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab button:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+        }
+
+        .nav-tab button.active {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+
+        /* Main Content */
+        main {
+            padding: 40px 0;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #d4af37;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #d4af37;
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .upload-area:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #f4d03f;
+        }
+
+        .upload-area.dragover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: #f4d03f;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+
+        /* File List */
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            font-size: 1.5em;
+            color: #d4af37;
+        }
+
+        .file-details h4 {
+            margin-bottom: 5px;
+        }
+
+        .file-details span {
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            height: 500px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #d4af37, #f4d03f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a2e;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .message.user .message-content {
+            background: rgba(74, 144, 226, 0.2);
+            border-color: rgba(74, 144, 226, 0.3);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            gap: 15px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .chat-input input::placeholder {
+            color: #cccccc;
+        }
+
+        .chat-input button {
+            padding: 15px 25px;
+            border-radius: 25px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d4af37;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #d4af37;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-top: 2px solid #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Search Results */
+        .search-results {
+            margin-top: 30px;
+        }
+
+        .search-result {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .search-result:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateX(5px);
+        }
+
+        .search-result h3 {
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #f4d03f);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Document Viewer */
+        .document-viewer {
+            height: 600px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .document-content {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .highlight {
+            background: rgba(212, 175, 55, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        /* Export Options */
+        .export-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .status-processing {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+        }
+
+        .status-error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .logo h1 {
+                font-size: 1.5em;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                min-width: auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .api-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-balance-scale"></i>
+                    <div>
+                        <h1>Indian Legal Document Analyzer</h1>
+                        <span>AI-Powered Professional Solution</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-user-circle"></i>
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-tabs">
+                <li class="nav-tab">
+                    <button class="tab-btn active" data-tab="config">
+                        <i class="fas fa-cog"></i>
+                        API Configuration
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="upload">
+                        <i class="fas fa-upload"></i>
+                        Document Upload
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="summarize">
+                        <i class="fas fa-file-alt"></i>
+                        Summarization
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="qa">
+                        <i class="fas fa-question-circle"></i>
+                        Legal Q&A
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="translate">
+                        <i class="fas fa-language"></i>
+                        Translation
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="search">
+                        <i class="fas fa-search"></i>
+                        Search & Analysis
+                    </button>
+                </li>
+                <li class="nav-tab">
+                    <button class="tab-btn" data-tab="viewer">
+                        <i class="fas fa-eye"></i>
+                        Document Viewer
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <!-- API Configuration Tab -->
+            <div id="config" class="tab-content active">
+                <div class="card">
+                    <h2><i class="fas fa-key"></i> API Configuration</h2>
+                    <p style="margin-bottom: 20px; color: #cccccc;">Configure your API keys to enable AI-powered features. Your keys are stored locally and never sent to our servers.</p>
+                    
+                    <div class="api-config">
+                        <h3><i class="fas fa-brain"></i> OpenAI Configuration</h3>
+                        <div class="api-inputs">
+                            <div class="api-input-group">
+                                <label for="openai-key">OpenAI API Key</label>
+                                <input type="password" id="openai-key" placeholder="sk-..." onchange="validateOpenAIKey()">
+                            </div>
+                            <div class="api-input-group">
+                                <label for="openai-model">Model</label>
+                                <select id="openai-model">
+                                    <option value="gpt-4">GPT-4 (Recommended)</option>
+                                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot" id="openai-status"></div>
+                            <span id="openai-status-text">Not connected</span>
+                        </div>
+                    </div>
+
+                    <div class="api-config">
+                        <h3><i class="fas fa-language"></i> Google Translate Configuration</h3>
+                        <div class="api-inputs">
+                            <div class="api-input-group">
+                                <label for="google-key">Google Cloud API Key</label>
+                                <input type="password" id="google-key" placeholder="AIza..." onchange="validateGoogleKey()">
+                            </div>
+                            <div class="api-input-group">
+                                <label for="google-project">Project ID</label>
+                                <input type="text" id="google-project" placeholder="my-project-id">
+                            </div>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot" id="google-status"></div>
+                            <span id="google-status-text">Not connected</span>
+                        </div>
+                    </div>
+
+                    <div class="api-config">
+                        <h3><i class="fas fa-file-alt"></i> Document Processing Configuration</h3>
+                        <div class="api-inputs">
+                            <div class="api-input-group">
+                                <label for="pdf-service">PDF Processing Service</label>
+                                <select id="pdf-service">
+                                    <option value="builtin">Built-in PDF.js</option>
+                                    <option value="azure">Azure Document Intelligence</option>
+                                    <option value="aws">AWS Textract</option>
+                                </select>
+                            </div>
+                            <div class="api-input-group">
+                                <label for="azure-key">Azure/AWS API Key</label>
+                                <input type="password" id="azure-key" placeholder="Optional for advanced OCR">
+                            </div>
+                        </div>
+                        <div class="api-status">
+                            <div class="status-dot connected" id="pdf-status"></div>
+                            <span id="pdf-status-text">Built-in service ready</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="testAllConnections()">
+                            <i class="fas fa-check-circle"></i>
+                            Test All Connections
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearAllKeys()">
+                            <i class="fas fa-trash"></i>
+                            Clear All Keys
+                        </button>
+                    </div>
+
+                    <div class="error-message" id="config-error"></div>
+                </div>
+            </div>
+
+            <!-- Document Upload Tab -->
+            <div id="upload" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Document Upload & AI Processing</h2>
+                    
+                    <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="upload-text">Click to upload or drag and drop your legal documents</div>
+                        <div class="upload-subtext">Supports PDF, DOC, DOCX, TXT files up to 50MB</div>
+                    </div>
+                    
+                    <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.txt" style="display: none;">
+                    
+                    <div class="file-list" id="file-list"></div>
+                    
+                    <div class="progress-container" id="progress-container" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <p id="progress-text">Processing documents...</p>
+                    </div>
+
+                    <div class="error-message" id="upload-error"></div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-bar"></i> AI Document Analysis</h2>
+                    <div id="analysis-overview">
+                        <p>Upload documents to view AI-powered analysis including:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Legal entity extraction (parties, judges, lawyers)</li>
+                            <li>Key date and timeline identification</li>
+                            <li>Case number and citation references</li>
+                            <li>Legal section and act references</li>
+                            <li>Document classification and type</li>
+                            <li>Sentiment analysis and key themes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summarization Tab -->
+            <div id="summarize" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-compress-alt"></i> AI-Powered Legal Document Summarization</h2>
+                    
+                    <div class="form-group">
+                        <label for="summary-type">Summary Type</label>
+                        <select id="summary-type">
+                            <option value="comprehensive">Comprehensive Legal Summary</option>
+                            <option value="executive">Executive Summary</option>
+                            <option value="key-points">Key Points & Legal Issues</option>
+                            <option value="timeline">Timeline & Chronology</option>
+                            <option value="parties">Parties & Stakeholders</option>
+                            <option value="precedents">Legal Precedents & Citations</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="summary-length">Summary Length</label>
+                        <select id="summary-length">
+                            <option value="short">Short (1-2 paragraphs)</option>
+                            <option value="medium">Medium (3-5 paragraphs)</option>
+                            <option value="long">Long (Detailed analysis)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="summary-focus">Legal Focus Area</label>
+                        <select id="summary-focus">
+                            <option value="general">General Analysis</option>
+                            <option value="contract">Contract Law</option>
+                            <option value="property">Property Law</option>
+                            <option value="criminal">Criminal Law</option>
+                            <option value="civil">Civil Procedure</option>
+                            <option value="corporate">Corporate Law</option>
+                            <option value="constitutional">Constitutional Law</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="generateAISummary()" id="generate-summary-btn">
+                        <i class="fas fa-magic"></i>
+                        Generate AI Summary
+                    </button>
+                    
+                    <div id="summary-result" style="display: none; margin-top: 30px;">
+                        <h3 style="color: #d4af37; margin-bottom: 20px;">AI-Generated Summary</h3>
+                        <div id="summary-content" class="document-content"></div>
+                        
+                        <div class="export-options">
+                            <button class="export-btn" onclick="exportSummary('pdf')">
+                                <i class="fas fa-file-pdf"></i> Export as PDF
+                            </button>
+                            <button class="export-btn" onclick="exportSummary('word')">
+                                <i class="fas fa-file-word"></i> Export as Word
+                            </button>
+                            <button class="export-btn" onclick="exportSummary('text')">
+                                <i class="fas fa-file-alt"></i> Export as Text
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="summary-error"></div>
+                </div>
+            </div>
+
+            <!-- Legal Q&A Tab -->
+            <div id="qa" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-comments"></i> AI Legal Assistant</h2>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        
+                        <div class="chat-input">
+                            <input type="text" id="chat-input" placeholder="Ask any question about Indian law or your documents...">
+                            <button class="btn btn-primary" onclick="sendAIMessage()" id="send-message-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="qa-error"></div>
+                </div>
+            </div>
+
+            <!-- Translation Tab -->
+            <div id="translate" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-globe"></i> AI-Powered Legal Translation</h2>
+                    
+                    <div class="flex gap-20" style="margin-bottom: 20px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="source-lang">Source Language</label>
+                            <select id="source-lang">
+                                <option value="auto">Auto-detect</option>
+                                <option value="en">English</option>
+                                <option value="hi">Hindi (हिंदी)</option>
+                                <option value="ta">Tamil (தமிழ்)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
+                                <option value="mr">Marathi (मराठी)</option>
+                                <option value="gu">Gujarati (ગુજરાતી)</option>
+                                <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                                <option value="ml">Malayalam (മലയാളം)</option>
+                                <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="target-lang">Target Language</label>
+                            <select id="target-lang">
+                                <option value="en">English</option>
+                                <option value="hi">Hindi (हिंदी)</option>
+                                <option value="ta">Tamil (தமிழ்)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
+                                <option value="mr">Marathi (मराठी)</option>
+                                <option value="gu">Gujarati (ગુજરાતી)</option>
+                                <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                                <option value="ml">Malayalam (മലയാളം)</option>
+                                <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="translation-text">Text to Translate</label>
+                        <textarea id="translation-text" placeholder="Enter legal text to translate or select from uploaded documents..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-10 mb-20">
+                        <button class="btn btn-primary" onclick="translateWithAI()" id="translate-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            Translate with AI
+                        </button>
+                        <button class="btn btn-secondary" onclick="swapLanguages()">
+                            <i class="fas fa-retweet"></i>
+                            Swap Languages
+                        </button>
+                    </div>
+                    
+                    <div id="translation-result" style="display: none;">
+                        <h3 style="color: #d4af37; margin-bottom: 15px;">Translation Result</h3>
+                        <div class="document-content" id="translation-output" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2);"></div>
+                        
+                        <div class="export-options">
+                            <button class="export-btn" onclick="exportTranslation()">
+                                <i class="fas fa-download"></i> Export Translation
+                            </button>
+                            <button class="export-btn" onclick="copyTranslation()">
+                                <i class="fas fa-copy"></i> Copy to Clipboard
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="translation-error"></div>
+                </div>
+            </div>
+
+            <!-- Search & Analysis Tab -->
+            <div id="search" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-search-plus"></i> AI-Powered Legal Search & Analysis</h2>
+                    
+                    <div class="form-group">
+                        <label for="search-query">Search Query</label>
+                        <input type="text" id="search-query" placeholder="Enter legal terms, case names, or questions...">
+                    </div>
+                    
+                    <div class="flex gap-20 mb-20">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="search-type">Search Type</label>
+                            <select id="search-type">
+                                <option value="semantic">AI Semantic Search</option>
+                                <option value="exact">Exact Match</option>
+                                <option value="similar">Similar Cases</option>
+                                <option value="precedent">Legal Precedents</option>
+                                <option value="statute">Statute Search</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="search-jurisdiction">Jurisdiction</label>
+                            <select id="search-jurisdiction">
+                                <option value="all">All India</option>
+                                <option value="supreme">Supreme Court</option>
+                                <option value="high">High Courts</option>
+                                <option value="district">District Courts</option>
+                                <option value="tribunal">Tribunals</option>
+                                <option value="state">State Courts</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="performAISearch()" id="search-btn">
+                        <i class="fas fa-search"></i>
+                        Search with AI
+                    </button>
+                    
+                    <div id="search-results" class="search-results" style="display: none;"></div>
+
+                    <div class="error-message" id="search-error"></div>
+                </div>
+            </div>
+
+            <!-- Document Viewer Tab -->
+            <div id="viewer" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-file-text"></i> AI-Enhanced Document Viewer</h2>
+                    
+                    <div class="flex gap-20 mb-20">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="viewer-document">Select Document</label>
+                            <select id="viewer-document">
+                                <option value="">Select a document to view...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="viewer-search">AI-Powered Search</label>
+                            <input type="text" id="viewer-search" placeholder="Search concepts, not just text...">
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-10 mb-20">
+                        <button class="btn btn-secondary btn-small" onclick="highlightWithAI('entities')">
+                            <i class="fas fa-highlighter"></i>
+                            AI Entity Detection
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="highlightWithAI('dates')">
+                            <i class="fas fa-calendar"></i>
+                            Smart Date Extraction
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="highlightWithAI('citations')">
+                            <i class="fas fa-quote-right"></i>
+                            Legal Citation Finder
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="highlightWithAI('key-terms')">
+                            <i class="fas fa-key"></i>
+                            Key Terms Analysis
+                        </button>
+                    </div>
+                    
+                    <div class="document-viewer" id="document-viewer">
+                        <div class="text-center" style="padding: 50px;">
+                            <i class="fas fa-file-alt" style="font-size: 3em; color: #d4af37; margin-bottom: 20px;"></i>
+                            <p>Select a document from the dropdown above to view its content</p>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="viewer-error"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configuration and API management
+        const API_CONFIG = {
+            openai: {
+                key: localStorage.getItem('openai_key') || '',
+                model: localStorage.getItem('openai_model') || 'gpt-4',
+                endpoint: 'https://api.openai.com/v1/chat/completions'
+            },
+            google: {
+                key: localStorage.getItem('google_key') || '',
+                project: localStorage.getItem('google_project') || '',
+                endpoint: 'https://translation.googleapis.com/language/translate/v2'
+            },
+            pdfService: localStorage.getItem('pdf_service') || 'builtin'
+        };
+
+        // Global variables
+        let uploadedFiles = [];
+        let currentDocument = null;
+        let searchHistory = [];
+        let documentContents = {};
+
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabName = this.dataset.tab;
+                switchTab(tabName);
+            });
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // API Configuration Functions
+        function validateOpenAIKey() {
+            const key = document.getElementById('openai-key').value;
+            const model = document.getElementById('openai-model').value;
+            
+            if (key) {
+                localStorage.setItem('openai_key', key);
+                localStorage.setItem('openai_model', model);
+                API_CONFIG.openai.key = key;
+                API_CONFIG.openai.model = model;
+                
+                // Test the key
+                testOpenAIConnection();
+            }
+        }
+
+        function validateGoogleKey() {
+            const key = document.getElementById('google-key').value;
+            const project = document.getElementById('google-project').value;
+            
+            if (key) {
+                localStorage.setItem('google_key', key);
+                localStorage.setItem('google_project', project);
+                API_CONFIG.google.key = key;
+                API_CONFIG.google.project = project;
+                
+                // Test the key
+                testGoogleConnection();
+            }
+        }
+
+        async function testOpenAIConnection() {
+            const statusDot = document.getElementById('openai-status');
+            const statusText = document.getElementById('openai-status-text');
+            
+            statusDot.className = 'status-dot';
+            statusText.textContent = 'Testing connection...';
+            
+            try {
+                const response = await fetch(API_CONFIG.openai.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.openai.key}`
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.openai.model,
+                        messages: [{ role: 'user', content: 'Hello' }],
+                        max_tokens: 5
+                    })
+                });
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Connected successfully';
+                } else {
+                    throw new Error('Invalid API key');
+                }
+            } catch (error) {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Connection failed';
+                console.error('OpenAI connection error:', error);
+            }
+        }
+
+        async function testGoogleConnection() {
+            const statusDot = document.getElementById('google-status');
+            const statusText = document.getElementById('google-status-text');
+            
+            statusDot.className = 'status-dot';
+            statusText.textContent = 'Testing connection...';
+            
+            try {
+                const response = await fetch(`${API_CONFIG.google.endpoint}?key=${API_CONFIG.google.key}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        q: 'Hello',
+                        source: 'en',
+                        target: 'hi'
+                    })
+                });
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Connected successfully';
+                } else {
+                    throw new Error('Invalid API key');
+                }
+            } catch (error) {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Connection failed';
+                console.error('Google Translate connection error:', error);
+            }
+        }
+
+        function testAllConnections() {
+            if (API_CONFIG.openai.key) testOpenAIConnection();
+            if (API_CONFIG.google.key) testGoogleConnection();
+        }
+
+        function clearAllKeys() {
+            localStorage.removeItem('openai_key');
+            localStorage.removeItem('openai_model');
+            localStorage.removeItem('google_key');
+            localStorage.removeItem('google_project');
+            
+            document.getElementById('openai-key').value = '';
+            document.getElementById('google-key').value = '';
+            document.getElementById('google-project').value = '';
+            
+            document.getElementById('openai-status').className = 'status-dot';
+            document.getElementById('openai-status-text').textContent = 'Not connected';
+            document.getElementById('google-status').className = 'status-dot';
+            document.getElementById('google-status-text').textContent = 'Not connected';
+        }
+
+        // File upload functionality
+        document.getElementById('file-input').addEventListener('change', handleFileUpload);
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFileUpload({ target: { files } });
+        });
+
+        async function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+
+            progressContainer.style.display = 'block';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                if (file.size > 50 * 1024 * 1024) {
+                    showError('upload-error', `File ${file.name} exceeds 50MB limit`);
+                    continue;
+                }
+
+                const fileItem = {
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    type: file.type,
+                    file: file,
+                    id: Date.now() + Math.random()
+                };
+
+                uploadedFiles.push(fileItem);
+                addFileToList(fileItem);
+                
+                // Process file content
+                try {
+                    const content = await extractFileContent(file);
+                    documentContents[fileItem.id] = content;
+                    
+                    // Update progress
+                    const progress = ((i + 1) / files.length) * 100;
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = `Processing ${file.name}... ${Math.round(progress)}%`;
+                    
+                } catch (error) {
+                    showError('upload-error', `Error processing ${file.name}: ${error.message}`);
+                }
+            }
+
+            updateDocumentSelector();
+            progressContainer.style.display = 'none';
+            
+            if (uploadedFiles.length > 0) {
+                await generateAIAnalysis();
+            }
+        }
+
+        async function extractFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    if (file.type === 'application/pdf') {
+                        // For PDF files, you would typically use PDF.js or send to a service
+                        // For now, we'll use a placeholder
+                        resolve("PDF content extraction would be implemented here with PDF.js or OCR service");
+                    } else {
+                        resolve(e.target.result);
+                    }
+                };
+                
+                reader.onerror = reject;
+                
+                if (file.type === 'application/pdf') {
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    reader.readAsText(file);
+                }
+            });
+        }
+
+        async function generateAIAnalysis() {
+            if (!API_CONFIG.openai.key) {
+                showError('upload-error', 'OpenAI API key required for AI analysis');
+                return;
+            }
+
+            const analysisOverview = document.getElementById('analysis-overview');
+            analysisOverview.innerHTML = '<div class="loading"><div class="spinner"></div> Analyzing documents with AI...</div>';
+
+            try {
+                const allContent = Object.values(documentContents).join('\n\n');
+                const prompt = `Analyze the following legal document(s) and provide a comprehensive analysis including:
+                1. Legal entities (parties, judges, lawyers)
+                2. Key dates and timelines
+                3. Case numbers and citations
+                4. Legal sections and act references
+                5. Document classification
+                6. Key themes and sentiment
+
+                Document content:
+                ${allContent.substring(0, 4000)}...`;
+
+                const response = await callOpenAI(prompt);
+                
+                analysisOverview.innerHTML = `
+                    <div class="status-indicator status-success">
+                        <i class="fas fa-check-circle"></i>
+                        AI Analysis Complete
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #d4af37; margin-bottom: 10px;">AI Analysis Results:</h4>
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2);">
+                            ${response.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                analysisOverview.innerHTML = `
+                    <div class="status-indicator status-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Analysis Failed
+                    </div>
+                    <p style="margin-top: 10px; color: #e74c3c;">Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        // AI Summarization
+        async function generateAISummary() {
+            if (!API_CONFIG.openai.key) {
+                showError('summary-error', 'OpenAI API key required for AI summarization');
+                return;
+            }
+
+            if (uploadedFiles.length === 0) {
+                showError('summary-error', 'Please upload documents first');
+                return;
+            }
+
+            const summaryResult = document.getElementById('summary-result');
+            const summaryContent = document.getElementById('summary-content');
+            const summaryType = document.getElementById('summary-type').value;
+            const summaryLength = document.getElementById('summary-length').value;
+            const summaryFocus = document.getElementById('summary-focus').value;
+            
+            const generateBtn = document.getElementById('generate-summary-btn');
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<div class="spinner"></div> Generating with AI...';
+
+            summaryContent.innerHTML = '<div class="loading"><div class="spinner"></div> AI is analyzing and summarizing your documents...</div>';
+            summaryResult.style.display = 'block';
+
+            try {
+                const allContent = Object.values(documentContents).join('\n\n');
+                const prompt = `As an AI legal assistant specialized in Indian law, provide a ${summaryLength} ${summaryType} summary of the following legal document(s) with focus on ${summaryFocus}:
+
+                Instructions:
+                - Focus on Indian legal context and relevant acts
+                - Identify key legal issues and precedents
+                - Highlight important dates, parties, and decisions
+                - Use proper legal terminology
+                - Format with clear headings and bullet points
+
+                Document content:
+                ${allContent.substring(0, 6000)}...`;
+
+                const response = await callOpenAI(prompt);
+                summaryContent.innerHTML = `<div class="document-content">${response.replace(/\n/g, '<br>')}</div>`;
+                
+            } catch (error) {
+                summaryContent.innerHTML = `<div class="status-indicator status-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Summary Generation Failed: ${error.message}
+                </div>`;
+            }
+
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate AI Summary';
+        }
+
+        // AI Legal Q&A
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendAIMessage();
+            }
+        });
+
+        async function sendAIMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            if (!API_CONFIG.openai.key) {
+                showError('qa-error', 'OpenAI API key required for AI legal assistance');
+                return;
+            }
+            
+            addMessageToChat(message, 'user');
+            input.value = '';
+            
+            const sendBtn = document.getElementById('send-message-btn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<div class="spinner"></div> Thinking...';
+
+            try {
+                const context = uploadedFiles.length > 0 ? 
+                    `Context from uploaded documents: ${Object.values(documentContents).join('\n\n').substring(0, 2000)}...` : 
+                    '';
+
+                const prompt = `You are an AI legal assistant specialized in Indian law. Answer the following question with accurate information about Indian legal procedures, acts, and precedents.
+
+                ${context}
+
+                Question: ${message}
+
+                Please provide a comprehensive answer covering:
+                - Relevant Indian legal acts and sections
+                - Applicable procedures and precedents
+                - Practical guidance and next steps
+                - Citations to relevant case law if applicable`;
+
+                const response = await callOpenAI(prompt);
+                addMessageToChat(response, 'ai');
+                
+            } catch (error) {
+                addMessageToChat(`I apologize, but I encountered an error: ${error.message}. Please check your API configuration and try again.`, 'ai');
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+        }
+
+        function addMessageToChat(message, sender) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender} fade-in`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${sender === 'user' ? 'U' : 'AI'}</div>
+                <div class="message-content">
+                    <p>${message.replace(/\n/g, '<br>')}</p>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // AI Translation
+        async function translateWithAI() {
+            const sourceText = document.getElementById('translation-text').value;
+            const sourceLang = document.getElementById('source-lang').value;
+            const targetLang = document.getElementById('target-lang').value;
+            
+            if (!sourceText.trim()) {
+                showError('translation-error', 'Please enter text to translate');
+                return;
+            }
+
+            if (!API_CONFIG.google.key) {
+                showError('translation-error', 'Google Translate API key required for translation');
+                return;
+            }
+
+            const translationResult = document.getElementById('translation-result');
+            const translationOutput = document.getElementById('translation-output');
+            const translateBtn = document.getElementById('translate-btn');
+            
+            translateBtn.disabled = true;
+            translateBtn.innerHTML = '<div class="spinner"></div> Translating...';
+
+            translationOutput.innerHTML = '<div class="loading"><div class="spinner"></div> Translating with AI...</div>';
+            translationResult.style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_CONFIG.google.endpoint}?key=${API_CONFIG.google.key}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        q: sourceText,
+                        source: sourceLang === 'auto' ? undefined : sourceLang,
+                        target: targetLang,
+                        format: 'text'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Translation failed');
+                }
+
+                const data = await response.json();
+                const translatedText = data.data.translations[0].translatedText;
+                const detectedLang = data.data.translations[0].detectedSourceLanguage || sourceLang;
+
+                translationOutput.innerHTML = `
+                    <div class="document-content">
+                        <p><strong>Original (${getLanguageName(detectedLang)}):</strong><br>${sourceText}</p>
+                        <hr style="margin: 20px 0; border-color: rgba(212, 175, 55, 0.3);">
+                        <p><strong>Translation (${getLanguageName(targetLang)}):</strong><br>${translatedText}</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                translationOutput.innerHTML = `<div class="status-indicator status-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Translation Failed: ${error.message}
+                </div>`;
+            }
+
+            translateBtn.disabled = false;
+            translateBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Translate with AI';
+        }
+
+        function getLanguageName(code) {
+            const languages = {
+                'en': 'English',
+                'hi': 'Hindi',
+                'ta': 'Tamil',
+                'bn': 'Bengali',
+                'te': 'Telugu',
+                'mr': 'Marathi',
+                'gu': 'Gujarati',
+                'kn': 'Kannada',
+                'ml': 'Malayalam',
+                'pa': 'Punjabi'
+            };
+            return languages[code] || code;
+        }
+
+        // AI Search
+        async function performAISearch() {
+            const query = document.getElementById('search-query').value;
+            
+            if (!query.trim()) {
+                showError('search-error', 'Please enter a search query');
+                return;
+            }
+
+            if (!API_CONFIG.openai.key) {
+                showError('search-error', 'OpenAI API key required for AI search');
+                return;
+            }
+
+            const searchResults = document.getElementById('search-results');
+            const searchBtn = document.getElementById('search-btn');
+            
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<div class="spinner"></div> Searching...';
+
+            searchResults.innerHTML = '<div class="loading"><div class="spinner"></div> AI is searching legal database...</div>';
+            searchResults.style.display = 'block';
+
+            try {
+                const prompt = `As an AI legal research assistant, search for and provide information about: "${query}"
+
+                Please provide:
+                1. Relevant Indian legal cases and precedents
+                2. Applicable statutes and legal provisions
+                3. Key legal principles and interpretations
+                4. Recent developments in this area of law
+                5. Practical implications for legal practitioners
+
+                Format your response as a comprehensive legal research summary with proper citations where applicable.`;
+
+                const response = await callOpenAI(prompt);
+                
+                searchResults.innerHTML = `
+                    <h3 style="color: #d4af37; margin-bottom: 20px;">AI Search Results for: "${query}"</h3>
+                    <div class="search-result">
+                        <div class="document-content">
+                            ${response.replace(/\n/g, '<br>')}
+                        </div>
+                        <div class="export-options">
+                            <button class="export-btn" onclick="exportSearchResults()">
+                                <i class="fas fa-download"></i> Export Results
+                            </button>
+                            <button class="export-btn" onclick="saveToHistory('${query}')">
+                                <i class="fas fa-bookmark"></i> Save to History
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                searchResults.innerHTML = `<div class="status-indicator status-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Search Failed: ${error.message}
+                </div>`;
+            }
+
+            searchBtn.disabled = false;
+            searchBtn.innerHTML = '<i class="fas fa-search"></i> Search with AI';
+        }
+
+        // AI Document Highlighting
+        async function highlightWithAI(type) {
+            if (!currentDocument) {
+                showError('viewer-error', 'Please select a document first');
+                return;
+            }
+
+            if (!API_CONFIG.openai.key) {
+                showError('viewer-error', 'OpenAI API key required for AI highlighting');
+                return;
+            }
+
+            const content = document.querySelector('.document-content');
+            if (!content) return;
+
+            const originalText = documentContents[currentDocument.id];
+            
+            try {
+                let prompt = '';
+                switch (type) {
+                    case 'entities':
+                        prompt = `Identify and list all legal entities (parties, judges, lawyers, organizations) in this document. Return them as a JSON array: ${originalText.substring(0, 2000)}`;
+                        break;
+                    case 'dates':
+                        prompt = `Extract all important dates from this legal document. Return them as a JSON array: ${originalText.substring(0, 2000)}`;
+                        break;
+                    case 'citations':
+                        prompt = `Find all legal citations, case references, and statute references in this document. Return them as a JSON array: ${originalText.substring(0, 2000)}`;
+                        break;
+                    case 'key-terms':
+                        prompt = `Identify key legal terms, important clauses, and critical phrases in this document. Return them as a JSON array: ${originalText.substring(0, 2000)}`;
+                        break;
+                }
+
+                const response = await callOpenAI(prompt);
+                // Parse the response and highlight the identified terms
+                // This is a simplified implementation - you'd want more sophisticated highlighting
+                
+                let html = content.innerHTML;
+                try {
+                    const terms = JSON.parse(response);
+                    terms.forEach(term => {
+                        const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                        html = html.replace(regex, '<span class="highlight">$1</span>');
+                    });
+                    content.innerHTML = html;
+                } catch (e) {
+                    // If JSON parsing fails, treat response as plain text with terms separated by lines
+                    const terms = response.split('\n').filter(term => term.trim());
+                    terms.forEach(term => {
+                        const cleanTerm = term.replace(/^[-*•]\s*/, '').trim();
+                        if (cleanTerm) {
+                            const regex = new RegExp(`(${cleanTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                            html = html.replace(regex, '<span class="highlight">$1</span>');
+                        }
+                    });
+                    content.innerHTML = html;
+                }
+                
+            } catch (error) {
+                showError('viewer-error', `AI highlighting failed: ${error.message}`);
+            }
+        }
+
+        // Core AI function
+        async function callOpenAI(prompt, temperature = 0.7) {
+            const response = await fetch(API_CONFIG.openai.endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_CONFIG.openai.key}`
+                },
+                body: JSON.stringify({
+                    model: API_CONFIG.openai.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are an expert AI legal assistant specialized in Indian law. Provide accurate, comprehensive, and practical legal guidance.'
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: temperature,
+                    max_tokens: 2000
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'OpenAI API error');
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // Utility functions
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            
+            setTimeout(() => {
+                errorElement.classList.remove('show');
+            }, 5000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function addFileToList(fileItem) {
+            const fileList = document.getElementById('file-list');
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'file-item fade-in';
+            fileDiv.innerHTML = `
+                <div class="file-info">
+                    <i class="fas fa-file-alt file-icon"></i>
+                    <div class="file-details">
+                        <h4>${fileItem.name}</h4>
+                        <span>${fileItem.size} • ${getFileTypeIcon(fileItem.type)}</span>
+                    </div>
+                </div>
+                <div class="file-actions">
+                    <button class="btn btn-secondary btn-small" onclick="removeFile('${fileItem.id}')">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+            fileList.appendChild(fileDiv);
+        }
+
+        function removeFile(fileId) {
+            uploadedFiles = uploadedFiles.filter(file => file.id != fileId);
+            delete documentContents[fileId];
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '';
+            uploadedFiles.forEach(file => addFileToList(file));
+            updateDocumentSelector();
+        }
+
+        function updateDocumentSelector() {
+            const selector = document.getElementById('viewer-document');
+            selector.innerHTML = '<option value="">Select a document to view...</option>';
+            
+            uploadedFiles.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.id;
+                option.textContent = file.name;
+                selector.appendChild(option);
+            });
+        }
+
+        function getFileTypeIcon(type) {
+            if (type.includes('pdf')) return 'PDF';
+            if (type.includes('word')) return 'Word';
+            if (type.includes('text')) return 'Text';
+            return 'Document';
+        }
+
+        function swapLanguages() {
+            const sourceLang = document.getElementById('source-lang');
+            const targetLang = document.getElementById('target-lang');
+            
+            const temp = sourceLang.value;
+            sourceLang.value = targetLang.value;
+            targetLang.value = temp;
+        }
+
+        function exportSummary(format) {
+            const content = document.getElementById('summary-content').textContent;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `legal-summary.${format === 'pdf' ? 'txt' : format}`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportTranslation() {
+            const content = document.getElementById('translation-output').textContent;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'translation.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyTranslation() {
+            const translationOutput = document.getElementById('translation-output');
+            const text = translationOutput.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Translation copied to clipboard!');
+            });
+        }
+
+        function exportSearchResults() {
+            const content = document.querySelector('#search-results .document-content').textContent;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'search-results.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function saveToHistory(query) {
+            searchHistory.push({
+                query: query,
+                timestamp: new Date().toISOString(),
+                results: document.querySelector('#search-results .document-content').textContent
+            });
+            localStorage.setItem('search_history', JSON.stringify(searchHistory));
+            alert('Search saved to history!');
+        }
+
+        // Document viewer functionality
+        document.getElementById('viewer-document').addEventListener('change', function() {
+            const fileId = this.value;
+            const file = uploadedFiles.find(f => f.id == fileId);
+            
+            if (file) {
+                loadDocumentContent(file);
+            }
+        });
+
+        function loadDocumentContent(file) {
+            const viewer = document.getElementById('document-viewer');
+            
+            viewer.innerHTML = '<div class="loading text-center" style="padding: 50px;"><div class="spinner"></div> Loading document...</div>';
+            
+            setTimeout(() => {
+                const content = documentContents[file.id] || 'Document content not available';
+                viewer.innerHTML = `<div class="document-content">${content.replace(/\n/g, '<br>')}</div>`;
+                currentDocument = file;
+            }, 500);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved API keys
+            if (API_CONFIG.openai.key) {
+                document.getElementById('openai-key').value = API_CONFIG.openai.key;
+                document.getElementById('openai-model').value = API_CONFIG.openai.model;
+            }
+            
+            if (API_CONFIG.google.key) {
+                document.getElementById('google-key').value = API_CONFIG.google.key;
+                document.getElementById('google-project').value = API_CONFIG.google.project;
+            }
+
+            // Load search history
+            const savedHistory = localStorage.getItem('search_history');
+            if (savedHistory) {
+                searchHistory = JSON.parse(savedHistory);
+            }
+
+            // Add initial AI message
+            addMessageToChat('Hello! I\'m your AI legal assistant specialized in Indian law. I can help you with legal questions, document analysis, and research. What would you like to know?', 'ai');
+        });
+    </script>
+</body>
+</html>
