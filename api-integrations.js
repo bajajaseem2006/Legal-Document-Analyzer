@@ -16,6 +16,11 @@ class LegalDocumentAPIs {
             gemini: {
                 apiKey: '', // Get from https://aistudio.google.com/app/apikey
                 baseUrl: 'https://generativelanguage.googleapis.com/v1beta'
+            },
+            googlecloud: {
+                projectId: '', // Get from https://cloud.google.com/document-ai
+                apiKey: '', // Service account key file path
+                baseUrl: 'https://documentai.googleapis.com/v1'
             }
         };
         
@@ -31,6 +36,8 @@ class LegalDocumentAPIs {
             this.config.openai.apiKey = keys.openai || '';
             this.config.gemini.apiKey = keys.gemini || '';
             this.config.huggingface.apiKey = keys.huggingface || '';
+            this.config.googlecloud.projectId = keys.googlecloud_project || '';
+            this.config.googlecloud.apiKey = keys.googlecloud || '';
         }
     }
 
@@ -204,6 +211,57 @@ Please provide a comprehensive answer covering:
         }
     }
 
+    // ==================== DOCUMENT PROCESSING ====================
+
+    async processDocumentWithGoogleCloud(documentContent) {
+        if (this.config.googlecloud.projectId && this.config.googlecloud.apiKey) {
+            try {
+                // This is a simplified example - in production, you'd use the Google Cloud SDK
+                const response = await this.makeAPICall(
+                    `${this.config.googlecloud.baseUrl}/projects/${this.config.googlecloud.projectId}/locations/us/processors/YOUR_PROCESSOR_ID:process`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${this.config.googlecloud.apiKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            rawDocument: {
+                                content: documentContent,
+                                mimeType: 'application/pdf'
+                            }
+                        })
+                    }
+                );
+
+                return this.processGoogleCloudResponse(response);
+            } catch (error) {
+                console.log('Google Cloud Document AI failed, using fallback...');
+            }
+        }
+
+        return this.getMockDocumentProcessing();
+    }
+
+    processGoogleCloudResponse(response) {
+        // Process Google Cloud Document AI response
+        return {
+            text: response.document?.text || '',
+            entities: response.document?.entities || [],
+            pages: response.document?.pages || [],
+            confidence: response.document?.confidence || 0
+        };
+    }
+
+    getMockDocumentProcessing() {
+        return {
+            text: 'Extracted document text would appear here',
+            entities: ['Sample Entity 1', 'Sample Entity 2'],
+            pages: ['Page 1 content', 'Page 2 content'],
+            confidence: 0.85
+        };
+    }
+
     // ==================== ENTITY EXTRACTION ====================
 
     async extractEntities(text) {
@@ -353,7 +411,8 @@ This is a mock search result. Actual implementation would provide more detailed 
     // ==================== UTILITY FUNCTIONS ====================
 
     isConfigured() {
-        return this.config.openai.apiKey || this.config.gemini.apiKey || this.config.huggingface.apiKey;
+        return this.config.openai.apiKey || this.config.gemini.apiKey || this.config.huggingface.apiKey || 
+               (this.config.googlecloud.projectId && this.config.googlecloud.apiKey);
     }
 
     getAvailableAPIs() {
@@ -361,6 +420,7 @@ This is a mock search result. Actual implementation would provide more detailed 
         if (this.config.openai.apiKey) available.push('OpenAI');
         if (this.config.gemini.apiKey) available.push('Gemini');
         if (this.config.huggingface.apiKey) available.push('Hugging Face');
+        if (this.config.googlecloud.projectId && this.config.googlecloud.apiKey) available.push('Google Cloud Document AI');
         return available;
     }
 

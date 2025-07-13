@@ -7,7 +7,7 @@ class APISetup {
             openai: '',
             gemini: '',
             huggingface: '',
-            azure: '',
+            googlecloud: '',
             anthropic: ''
         };
         
@@ -53,6 +53,13 @@ class APISetup {
                 url: 'https://huggingface.co/settings/tokens',
                 description: 'For entity extraction and NLP tasks',
                 format: 'hf_...'
+            },
+            {
+                key: 'googlecloud',
+                name: 'Google Cloud Document AI Key',
+                url: 'https://cloud.google.com/document-ai',
+                description: 'For document processing and text extraction',
+                format: 'Service account JSON key'
             }
         ];
 
@@ -147,7 +154,7 @@ class APISetup {
             openai: '',
             gemini: '',
             huggingface: '',
-            azure: '',
+            googlecloud: '',
             anthropic: ''
         };
         localStorage.removeItem('legalDocAnalyzer_apiKeys');
@@ -160,6 +167,7 @@ class APISetup {
             window.legalAPIs.config.openai.apiKey = this.apiKeys.openai;
             window.legalAPIs.config.gemini.apiKey = this.apiKeys.gemini;
             window.legalAPIs.config.huggingface.apiKey = this.apiKeys.huggingface;
+            window.legalAPIs.config.googlecloud.apiKey = this.apiKeys.googlecloud;
             console.log('🔄 API class updated with stored keys');
         }
     }
@@ -186,6 +194,11 @@ class APISetup {
    - Go to: https://huggingface.co/join
    - Create account
    - Generate token from settings
+   
+   🔑 Google Cloud Document AI (For Document Processing)
+   - Go to: https://cloud.google.com/document-ai
+   - Create Google Cloud account
+   - Enable Document AI API and get service account key
 
 2. SETUP PROCESS:
    - Run: apiSetup.setupAPIKeys()

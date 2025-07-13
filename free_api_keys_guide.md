@@ -30,14 +30,14 @@
   - Create new token
   - Save as: `hf_...`
 
-### 4. Azure Cognitive Services (For Document Analysis)
-**Free Tier**: 5,000 transactions/month
-- **Sign up**: https://azure.microsoft.com/free/cognitive-services/
-- **Features**: Document intelligence, text extraction from PDFs
+### 4. Google Cloud Document AI (For Document Analysis)
+**Free Tier**: 1,000 pages/month
+- **Sign up**: https://cloud.google.com/document-ai
+- **Features**: Document intelligence, text extraction from PDFs, form parsing
 - **Usage**:
-  1. Create Azure account
-  2. Create Cognitive Services resource
-  3. Get keys and endpoint
+  1. Create Google Cloud account
+  2. Enable Document AI API
+  3. Create service account and download JSON key
 
 ### 5. Gemini API (Google's AI)
 **Free Tier**: 60 requests/minute
@@ -65,8 +65,8 @@ Create a `.env` file in your project root:
 OPENAI_API_KEY=sk-your-openai-key-here
 GOOGLE_TRANSLATE_KEY=your-google-key-here
 HUGGINGFACE_API_KEY=hf_your-huggingface-key-here
-AZURE_COGNITIVE_KEY=your-azure-key-here
-AZURE_COGNITIVE_ENDPOINT=https://your-region.cognitiveservices.azure.com/
+GOOGLE_CLOUD_PROJECT_ID=your-project-id-here
+GOOGLE_CLOUD_DOCUMENT_AI_KEY=path-to-your-service-account-key.json
 GEMINI_API_KEY=your-gemini-key-here
 ```
 
@@ -85,15 +85,15 @@ GEMINI_API_KEY=your-gemini-key-here
 
 ### For Translation:
 - **Primary**: Google Translate API
-- **Alternative**: Azure Translator (also has free tier)
+- **Alternative**: Google Cloud Translation API (same company, different service tier)
 
 ### For Entity Extraction:
 - **Primary**: Hugging Face NER models
-- **Alternative**: Azure Text Analytics
+- **Alternative**: Google Cloud Natural Language API
 
 ### For Document Processing:
-- **Primary**: Azure Document Intelligence
-- **Alternative**: Google Cloud Document AI
+- **Primary**: Google Cloud Document AI
+- **Alternative**: Google Cloud Vision API (for OCR)
 
 ## 🚨 Important Notes
 
@@ -108,7 +108,7 @@ GEMINI_API_KEY=your-gemini-key-here
 - [OpenAI API Documentation](https://platform.openai.com/docs)
 - [Google Translate API Docs](https://cloud.google.com/translate/docs)
 - [Hugging Face API Docs](https://huggingface.co/docs/api-inference)
-- [Azure Cognitive Services Docs](https://docs.microsoft.com/azure/cognitive-services/)
+- [Google Cloud Document AI Docs](https://cloud.google.com/document-ai/docs)
 
 ## 🎯 Next Steps
 

@@ -38,6 +38,10 @@ Choose at least one of these free services:
    - Sign up: https://huggingface.co/join
    - Generate token from settings
 
+4. **Google Cloud Document AI** (For Document Processing) - 1,000 pages/month
+   - Sign up: https://cloud.google.com/document-ai
+   - Enable Document AI API and get service account key
+
 ### Step 2: Configure API Keys
 Open your legal document analyzer and:
 
@@ -137,6 +141,7 @@ lda.html (UI) → api-integrations.js (API Layer) → External APIs
 | Google Gemini | Free | 60 RPM |
 | Hugging Face | Free | 1,000/month |
 | MyMemory Translate | Free | 1,000/day |
+| Google Cloud Document AI | 1,000 pages/month | 600 RPM |
 
 ## 🔧 Troubleshooting
 
@@ -208,6 +213,8 @@ apiSetup.showInstructions()
 - [Google Gemini API Guide](https://ai.google.dev/docs)
 - [Hugging Face API Docs](https://huggingface.co/docs/api-inference)
 - [MyMemory Translation API](https://mymemory.translated.net/doc/spec.php)
+- [Google Cloud Document AI Docs](https://cloud.google.com/document-ai/docs)
+- [Google Cloud Natural Language API](https://cloud.google.com/natural-language/docs)
 
 ## 🆘 Support
 
